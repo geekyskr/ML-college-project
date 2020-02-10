@@ -1,0 +1,45 @@
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
+
+dataset = pd.read_csv("online_shoppers_intention_raw.csv")
+#dataset.head
+lb=LabelEncoder()
+for i in ('Month', 'VisitorType', 'Weekend', 'Revenue'):
+    dataset[i]=lb.fit_transform(dataset[i])
+dataset.info()
+
+
+Xdata = dataset.drop(["Revenue"], axis = 1)
+X = np.array(Xdata)
+#print(X)
+#print(X.shape)
+w_ = np.random.uniform(0, 1, size = (X.shape[1], 2))
+#print(w_.shape)
+
+
+
+lr=0.5
+epoch=2
+sum1=0
+for ite in range(epoch):
+    print("learning rate is ",lr)
+    for i in range(X.shape[0]):
+        print("i :" ,i)
+        temp=[]
+        for j in range(w_.shape[1]):
+            print("j: ",j)
+            for k in range(w_.shape[0]):
+                print("k: ",k)
+                sum1=sum1+((X[i][k]-w_[k][j])**2)
+            temp.append(sum1)
+        if(temp[0]<temp[1]):
+            index=0
+        else:
+            index=1
+        print("neuron at position ",index," won" )
+        for p in range(w_.shape[0]):
+            w_[p][index]=w_[p][index]+lr*(X[i][p]-w_[p][index])
+        print(w_)
+    lr=lr*0.5
